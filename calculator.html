@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAHTS | Cost Analysis Calculator</title>
+    <style>
+        :root {
+            --primary-dark: #1a2a3a;
+            --accent-blue: #3498db;
+            --success-green: #27ae60;
+            --light-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-main: #334155;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-main);
+            margin: 0; padding: 0;
+        }
+
+        /* Compact Header */
+        header {
+            background: white;
+            padding: 15px 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .logo { max-width: 150px; height: auto; }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        h1 { font-size: 1.5rem; text-align: center; color: var(--primary-dark); margin-bottom: 25px; }
+
+        /* 2x2 Grid for Questions */
+        .inputs-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: #f1f5f9;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .input-group { display: flex; flex-direction: column; }
+        label { font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; color: var(--primary-dark); }
+        input, select { padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; background: white; }
+
+        /* Table and Rows */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background-color: var(--primary-dark); color: white; padding: 12px; font-size: 0.8rem; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        .total-row { background-color: #f8fafc !important; font-weight: 700; color: var(--primary-dark); border-top: 2px solid var(--primary-dark); }
+        .emp-cost-row { background-color: #effaf3 !important; font-weight: 700; color: var(--success-green); }
+
+        @media (max-width: 600px) { .inputs-section { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="logo.png" alt="WAHTS Logo" class="logo">
+</header>
+
+<div class="container">
+    <h1>Interactive Cost Analysis Calculator</h1>
+    
+    <div class="inputs-section">
+        <div class="input-group">
+            <label for="unitCount">Number of Units Purchasing</label>
+            <input type="number" id="unitCount" value="2" min="1" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label for="empCount">Number of Employees in HCP</label>
+            <input type="number" id="empCount" value="500" min="1" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label for="cloudNeeded">Need Cloud Database Management?</label>
+            <select id="cloudNeeded" onchange="calculate()">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="audioNeeded">Need Audiologist Review Service?</label>
+            <select id="audioNeeded" onchange="calculate()">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Expense Category</th>
+                    <th>Year 1</th>
+                    <th>Year 2</th>
+                    <th>Year 3</th>
+                    <th>Year 4</th>
+                    <th>Year 5</th>
+                </tr>
+            </thead>
+            <tbody id="resultsTable"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function calculate() {
+        const units = parseInt(document.getElementById('unitCount').value) || 0;
+        const employees = parseInt(document.getElementById('empCount').value) || 0;
+        const cloudNeeded = document.getElementById('cloudNeeded').value === "Yes";
+        const audioNeeded = document.getElementById('audioNeeded').value === "Yes";
+
+        let pricePerUnit = units >= 20 ? 6435 : (units >= 10 ? 6921.5 : (units >= 4 ? 7468.5 : 7938));
+        const totalUnitCost = units * pricePerUnit;
+        
+        const rows = [
+            { name: "WAHTS Hardware Unit(s)", vals: [totalUnitCost, 0, 0, 0, 0], active: true },
+            { name: "Calibration & Maintenance", vals: [0, (units * 1400), (units * 1400), (units * 1400), (units * 1400)], active: true },
+            { name: "Cloud Database Management", vals: [1700, 1200, 1200, 1200, 1200], active: cloudNeeded },
+            { name: "Audiologist Review Service", vals: Array(5).fill(employees * 4), active: audioNeeded }
+        ];
+
+        let html = "";
+        let yearlyTotals = [0, 0, 0, 0, 0];
+
+        rows.forEach(row => {
+            html += `<tr><td>${row.name}</td>`;
+            row.vals.forEach((v, i) => {
+                if (row.active) {
+                    html += `<td>$${v.toLocaleString()}</td>`;
+                    yearlyTotals[i] += v;
+                } else {
+                    html += `<td style="color: #94a3b8;">N/A ($0)</td>`;
+                }
+            });
+            html += `</tr>`;
+        });
+
+        html += `<tr class="total-row"><td>Annual Investment</td>` + yearlyTotals.map(t => `<td>$${t.toLocaleString()}</td>`).join('') + `</tr>`;
+        html += `<tr class="emp-cost-row"><td>Cost Per Employee</td>` + yearlyTotals.map(t => `<td>$${(employees > 0 ? (t / employees).toFixed(2) : 0)}</td>`).join('') + `</tr>`;
+
+        document.getElementById('resultsTable').innerHTML = html;
+    }
+    calculate();
+</script>
+</body>
+</html>
