@@ -13,36 +13,65 @@
             --border-color: #e2e8f0;
             --text-main: #334155;
         }
-        body { font-family: 'Inter', sans-serif; background-color: var(--light-bg); color: var(--text-main); margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--light-bg); color: var(--text-main); margin: 0; padding: 0; line-height: 1.6; }
         header { background: white; padding: 15px; text-align: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
-        .logo { max-width: 150px; }
-        .container { max-width: 1000px; margin: 0 auto 60px auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        h1 { font-size: 1.5rem; text-align: center; color: var(--primary-dark); margin-bottom: 5px; }
-        #clientGreeting { font-size: 1.1rem; color: var(--accent-blue); text-align: center; margin-bottom: 25px; font-weight: 500; }
-        .inputs-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f1f5f9; padding: 25px; border-radius: 12px; margin-bottom: 30px; }
+        .logo { max-width: 150px; height: auto; }
+        
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto 60px auto; 
+            background: white; 
+            padding: 20px; /* Reduced for mobile */
+            border-radius: 16px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+        }
+
+        h1 { font-size: 1.4rem; text-align: center; color: var(--primary-dark); margin-bottom: 5px; }
+        #clientGreeting { font-size: 1rem; color: var(--accent-blue); text-align: center; margin-bottom: 25px; font-weight: 500; }
+
+        /* Improved Responsive Grid */
+        .inputs-section { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 15px; 
+            background: #f1f5f9; 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-bottom: 30px; 
+        }
+
         .input-group { display: flex; flex-direction: column; }
-        label { font-weight: 600; font-size: 0.85rem; margin-bottom: 8px; }
-        input, select { padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; }
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: var(--primary-dark); color: white; padding: 12px; font-size: 0.8rem; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        label { font-weight: 600; font-size: 0.85rem; margin-bottom: 6px; color: var(--primary-dark); }
+        input, select { 
+            padding: 12px; 
+            border: 2px solid var(--border-color); 
+            border-radius: 8px; 
+            font-size: 1rem; /* Better for mobile touch */
+            background: white; 
+            width: 100%;
+            box-sizing: border-box; 
+        }
+
+        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; } /* Ensures table doesn't squish too much */
+        th { background: var(--primary-dark); color: white; padding: 12px; font-size: 0.75rem; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
+        
         .total-row { background: #f8fafc; font-weight: 700; border-top: 2px solid var(--primary-dark); }
         .emp-cost-row { background: #effaf3; font-weight: 700; color: var(--success-green); }
         
-        /* Sales Tool - HIDDEN BY DEFAULT */
-        #salesToolSection { 
-            display: none; 
-            margin-top: 40px; 
-            padding: 20px; 
-            background: #fff; 
-            border: 2px dashed var(--border-color); 
-            border-radius: 12px; 
-            text-align: center; 
+        #salesToolSection { display: none; margin-top: 40px; padding: 20px; background: #fff; border: 2px dashed var(--border-color); border-radius: 12px; text-align: center; }
+        .btn { background: var(--accent-blue); color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px; width: auto; }
+        #generatedLink { width: 100%; max-width: 400px; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        
+        .disclaimer { margin-top: 20px; padding: 15px; font-size: 0.75rem; color: #64748b; text-align: center; border-top: 1px solid #eee; }
+
+        /* Mobile Specific Fixes */
+        @media (max-width: 600px) {
+            .container { padding: 15px; margin: 10px; }
+            .inputs-section { grid-template-columns: 1fr; padding: 15px; }
+            h1 { font-size: 1.2rem; }
         }
-        .btn { background: var(--accent-blue); color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px; }
-        #generatedLink { width: 70%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem; }
-        .disclaimer { margin-top: 20px; padding: 15px; font-size: 0.8rem; color: #64748b; text-align: center; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -55,36 +84,37 @@
     
     <div class="inputs-section">
         <div class="input-group">
-            <label>Number of Units</label>
-            <input type="number" id="unitCount" value="2" oninput="calculate()">
+            <label for="unitCount">Number of Units Purchasing</label>
+            <input type="number" id="unitCount" value="2" min="1" oninput="calculate()">
         </div>
         <div class="input-group">
-            <label>Employees in HCP</label>
-            <input type="number" id="empCount" value="500" oninput="calculate()">
+            <label for="empCount">Number of Employees in HCP</label>
+            <input type="number" id="empCount" value="500" min="1" oninput="calculate()">
         </div>
         <div class="input-group">
-            <label>Cloud Database Management?</label>
-            <select id="cloudNeeded" onchange="calculate()"><option>Yes</option><option>No</option></select>
+            <label for="cloudNeeded">Need Cloud Database Management?</label>
+            <select id="cloudNeeded" onchange="calculate()"><option value="Yes">Yes</option><option value="No">No</option></select>
         </div>
         <div class="input-group">
-            <label>Audiologist Review Service?</label>
-            <select id="audioNeeded" onchange="calculate()"><option>Yes</option><option>No</option></select>
+            <label for="audioNeeded">Need Audiologist Review Service?</label>
+            <select id="audioNeeded" onchange="calculate()"><option value="Yes">Yes</option><option value="No">No</option></select>
         </div>
     </div>
 
     <div class="table-container">
         <table>
-            <thead><tr><th>Category</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th><th>Year 5</th></tr></thead>
+            <thead><tr><th>Expense Category</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th><th>Year 5</th></tr></thead>
             <tbody id="resultsTable"></tbody>
         </table>
     </div>
 
     <div id="salesToolSection">
         <h3 style="color:var(--accent-blue)">Admin Sales Tool</h3>
-        <p style="font-size:0.8rem; margin-bottom:10px;">Configure the calculator above, then generate the link for the client.</p>
-        <input type="text" id="clientNameInput" placeholder="Enter Client Name" style="width: 250px; padding: 8px;">
+        <input type="text" id="clientNameInput" placeholder="Enter Client Name" style="width: 100%; max-width: 300px; padding: 10px; margin-bottom: 10px;">
+        <br>
         <button class="btn" onclick="generateLink()">Generate Client Link</button><br>
         <input type="text" id="generatedLink" readonly placeholder="Link will appear here...">
+        <br>
         <button class="btn" style="background:var(--success-green)" onclick="copyLink()">Copy Link</button>
     </div>
 
@@ -97,12 +127,7 @@
 <script>
     function init() {
         const p = new URLSearchParams(window.location.search);
-        
-        // Check for Admin Mode
-        if (p.get('admin') === 'true') {
-            document.getElementById('salesToolSection').style.display = 'block';
-        }
-
+        if (p.get('admin') === 'true') document.getElementById('salesToolSection').style.display = 'block';
         if (p.has('client')) document.getElementById('clientGreeting').innerText = "Prepared for " + p.get('client');
         if (p.has('units')) document.getElementById('unitCount').value = p.get('units');
         if (p.has('emps')) document.getElementById('empCount').value = p.get('emps');
@@ -121,8 +146,8 @@
         const rows = [
             { n: "Hardware", v: [u*price, 0, 0, 0, 0], act: true },
             { n: "Calibration", v: [0, u*cal, u*cal, u*cal, u*cal], act: true },
-            { n: "Cloud", v: [1700, 1200, 1200, 1200, 1200], act: c },
-            { n: "Audiologist", v: Array(5).fill(e*4), act: a }
+            { n: "Cloud Database", v: [1700, 1200, 1200, 1200, 1200], act: c },
+            { n: "Audiologist Review", v: Array(5).fill(e*4), act: a }
         ];
         let h = ""; let totals = [0,0,0,0,0];
         rows.forEach(r => {
@@ -139,14 +164,12 @@
     }
 
     function generateLink() {
-        // This keeps your base URL but removes the ?admin=true so the client doesn't see the tool
         const url = window.location.origin + window.location.pathname;
         const name = document.getElementById('clientNameInput').value;
         const u = document.getElementById('unitCount').value;
         const e = document.getElementById('empCount').value;
         const c = document.getElementById('cloudNeeded').value;
         const a = document.getElementById('audioNeeded').value;
-        
         document.getElementById('generatedLink').value = `${url}?client=${encodeURIComponent(name)}&units=${u}&emps=${e}&cloud=${c}&audio=${a}`;
     }
 
