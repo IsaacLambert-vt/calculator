@@ -13,65 +13,25 @@
             --border-color: #e2e8f0;
             --text-main: #334155;
         }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--light-bg); color: var(--text-main); margin: 0; padding: 0; line-height: 1.6; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--light-bg); color: var(--text-main); margin: 0; padding: 0; line-height: 1.6; }
         header { background: white; padding: 15px; text-align: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
-        .logo { max-width: 150px; height: auto; }
-        
-        .container { 
-            max-width: 1000px; 
-            margin: 0 auto 60px auto; 
-            background: white; 
-            padding: 20px; /* Reduced for mobile */
-            border-radius: 16px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
-        }
-
+        .logo { max-width: 150px; }
+        .container { max-width: 1000px; margin: 0 auto 60px auto; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         h1 { font-size: 1.4rem; text-align: center; color: var(--primary-dark); margin-bottom: 5px; }
         #clientGreeting { font-size: 1rem; color: var(--accent-blue); text-align: center; margin-bottom: 25px; font-weight: 500; }
-
-        /* Improved Responsive Grid */
-        .inputs-section { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-            gap: 15px; 
-            background: #f1f5f9; 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-bottom: 30px; 
-        }
-
+        .inputs-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
         .input-group { display: flex; flex-direction: column; }
-        label { font-weight: 600; font-size: 0.85rem; margin-bottom: 6px; color: var(--primary-dark); }
-        input, select { 
-            padding: 12px; 
-            border: 2px solid var(--border-color); 
-            border-radius: 8px; 
-            font-size: 1rem; /* Better for mobile touch */
-            background: white; 
-            width: 100%;
-            box-sizing: border-box; 
-        }
-
-        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; } /* Ensures table doesn't squish too much */
+        label { font-weight: 600; font-size: 0.85rem; margin-bottom: 6px; }
+        input, select { padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1rem; width: 100%; box-sizing: border-box; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th { background: var(--primary-dark); color: white; padding: 12px; font-size: 0.75rem; text-transform: uppercase; }
         td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
-        
         .total-row { background: #f8fafc; font-weight: 700; border-top: 2px solid var(--primary-dark); }
         .emp-cost-row { background: #effaf3; font-weight: 700; color: var(--success-green); }
-        
         #salesToolSection { display: none; margin-top: 40px; padding: 20px; background: #fff; border: 2px dashed var(--border-color); border-radius: 12px; text-align: center; }
-        .btn { background: var(--accent-blue); color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px; width: auto; }
-        #generatedLink { width: 100%; max-width: 400px; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px; }
-        
+        .btn { background: var(--accent-blue); color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px; }
         .disclaimer { margin-top: 20px; padding: 15px; font-size: 0.75rem; color: #64748b; text-align: center; border-top: 1px solid #eee; }
-
-        /* Mobile Specific Fixes */
-        @media (max-width: 600px) {
-            .container { padding: 15px; margin: 10px; }
-            .inputs-section { grid-template-columns: 1fr; padding: 15px; }
-            h1 { font-size: 1.2rem; }
-        }
     </style>
 </head>
 <body>
@@ -84,20 +44,30 @@
     
     <div class="inputs-section">
         <div class="input-group">
-            <label for="unitCount">Number of Units Purchasing</label>
-            <input type="number" id="unitCount" value="2" min="1" oninput="calculate()">
+            <label>Number of Units Purchasing</label>
+            <input type="number" id="unitCount" value="2" oninput="calculate()">
         </div>
         <div class="input-group">
-            <label for="empCount">Number of Employees in HCP</label>
-            <input type="number" id="empCount" value="500" min="1" oninput="calculate()">
+            <label>Employees in HCP</label>
+            <input type="number" id="empCount" value="500" oninput="calculate()">
         </div>
         <div class="input-group">
-            <label for="cloudNeeded">Need Cloud Database Management?</label>
-            <select id="cloudNeeded" onchange="calculate()"><option value="Yes">Yes</option><option value="No">No</option></select>
+            <label>How many Admin Tablets?</label>
+            <select id="tabletCount" onchange="calculate()">
+                <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+            </select>
         </div>
         <div class="input-group">
-            <label for="audioNeeded">Need Audiologist Review Service?</label>
-            <select id="audioNeeded" onchange="calculate()"><option value="Yes">Yes</option><option value="No">No</option></select>
+            <label>Need Background Noise Monitoring (SLM)?</label>
+            <select id="slmNeeded" onchange="calculate()"><option>No</option><option>Yes</option></select>
+        </div>
+        <div class="input-group">
+            <label>Cloud Database Management?</label>
+            <select id="cloudNeeded" onchange="calculate()"><option>Yes</option><option>No</option></select>
+        </div>
+        <div class="input-group">
+            <label>Audiologist Review Service?</label>
+            <select id="audioNeeded" onchange="calculate()"><option>Yes</option><option>No</option></select>
         </div>
     </div>
 
@@ -110,12 +80,10 @@
 
     <div id="salesToolSection">
         <h3 style="color:var(--accent-blue)">Admin Sales Tool</h3>
-        <input type="text" id="clientNameInput" placeholder="Enter Client Name" style="width: 100%; max-width: 300px; padding: 10px; margin-bottom: 10px;">
-        <br>
-        <button class="btn" onclick="generateLink()">Generate Client Link</button><br>
-        <input type="text" id="generatedLink" readonly placeholder="Link will appear here...">
-        <br>
-        <button class="btn" style="background:var(--success-green)" onclick="copyLink()">Copy Link</button>
+        <input type="text" id="clientNameInput" placeholder="Enter Client Name" style="width: 100%; max-width: 300px; padding: 10px;">
+        <br><button class="btn" onclick="generateLink()">Generate Client Link</button><br>
+        <input type="text" id="generatedLink" readonly style="width: 100%; max-width: 400px; margin-top: 10px;">
+        <br><button class="btn" style="background:var(--success-green)" onclick="copyLink()">Copy Link</button>
     </div>
 
     <div class="disclaimer">
@@ -131,6 +99,8 @@
         if (p.has('client')) document.getElementById('clientGreeting').innerText = "Prepared for " + p.get('client');
         if (p.has('units')) document.getElementById('unitCount').value = p.get('units');
         if (p.has('emps')) document.getElementById('empCount').value = p.get('emps');
+        if (p.has('tablets')) document.getElementById('tabletCount').value = p.get('tablets');
+        if (p.has('slm')) document.getElementById('slmNeeded').value = p.get('slm');
         if (p.has('cloud')) document.getElementById('cloudNeeded').value = p.get('cloud');
         if (p.has('audio')) document.getElementById('audioNeeded').value = p.get('audio');
         calculate();
@@ -139,16 +109,23 @@
     function calculate() {
         const u = parseInt(document.getElementById('unitCount').value) || 0;
         const e = parseInt(document.getElementById('empCount').value) || 0;
+        const tCount = parseInt(document.getElementById('tabletCount').value) || 0;
+        const slmNeeded = document.getElementById('slmNeeded').value === "Yes";
         const c = document.getElementById('cloudNeeded').value === "Yes";
         const a = document.getElementById('audioNeeded').value === "Yes";
+        
         const price = u >= 20 ? 6435 : (u >= 10 ? 6921.5 : (u >= 4 ? 7468.5 : 7938));
         const cal = c ? 1400 : 1750;
+        
         const rows = [
-            { n: "Hardware", v: [u*price, 0, 0, 0, 0], act: true },
-            { n: "Calibration", v: [0, u*cal, u*cal, u*cal, u*cal], act: true },
+            { n: "WAHTS Hardware Unit(s)", v: [u*price, 0, 0, 0, 0], act: true },
+            { n: "Admin Tablet(s)", v: [tCount*550, 0, 0, 0, 0], act: tCount > 0 },
+            { n: "Sound Level Meter (Integrated)", v: [2550, 0, 0, 0, 0], act: slmNeeded },
+            { n: "Calibration & Maintenance", v: [0, u*cal, u*cal, u*cal, u*cal], act: true },
             { n: "Cloud Database", v: [1700, 1200, 1200, 1200, 1200], act: c },
             { n: "Audiologist Review", v: Array(5).fill(e*4), act: a }
         ];
+
         let h = ""; let totals = [0,0,0,0,0];
         rows.forEach(r => {
             h += `<tr><td style="font-weight:500">${r.n}</td>`;
@@ -168,14 +145,15 @@
         const name = document.getElementById('clientNameInput').value;
         const u = document.getElementById('unitCount').value;
         const e = document.getElementById('empCount').value;
+        const tabs = document.getElementById('tabletCount').value;
+        const slm = document.getElementById('slmNeeded').value;
         const c = document.getElementById('cloudNeeded').value;
         const a = document.getElementById('audioNeeded').value;
-        document.getElementById('generatedLink').value = `${url}?client=${encodeURIComponent(name)}&units=${u}&emps=${e}&cloud=${c}&audio=${a}`;
+        document.getElementById('generatedLink').value = `${url}?client=${encodeURIComponent(name)}&units=${u}&emps=${e}&tablets=${tabs}&slm=${slm}&cloud=${c}&audio=${a}`;
     }
 
     function copyLink() {
-        const linkBox = document.getElementById('generatedLink');
-        linkBox.select();
+        document.getElementById('generatedLink').select();
         document.execCommand("copy");
         alert("Client Link Copied!");
     }
