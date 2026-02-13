@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WAHTS | Cost Analysis Calculator</title>
+    <title>WAHTS | Custom Cost Analysis</title>
     <style>
         :root {
             --primary-dark: #1a2a3a;
@@ -21,6 +21,7 @@
             margin: 0; padding: 0; line-height: 1.6;
         }
 
+        /* Compact Header */
         header {
             background: white;
             padding: 15px 10px;
@@ -40,8 +41,17 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
 
-        h1 { font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 25px; text-align: center; }
+        h1 { font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 5px; text-align: center; }
+        
+        #clientGreeting { 
+            font-size: 1.1rem; 
+            color: var(--accent-blue); 
+            text-align: center; 
+            margin-bottom: 25px; 
+            font-weight: 500;
+        }
 
+        /* 2x2 Grid for Questions */
         .inputs-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -54,12 +64,16 @@
 
         .input-group { display: flex; flex-direction: column; }
         label { font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; color: var(--primary-dark); }
-        input, select { padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; background: white; }
+        input, select { padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; background: white; transition: border-color 0.2s; }
+        input:focus, select:focus { outline: none; border-color: var(--accent-blue); }
 
+        /* Table Styling */
         .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th { background-color: var(--primary-dark); color: white; padding: 12px; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
         td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        tr:hover { background-color: #fcfcfc; }
+        
         .total-row { background-color: #f8fafc !important; font-weight: 700; color: var(--primary-dark); border-top: 2px solid var(--primary-dark); }
         .emp-cost-row { background-color: #effaf3 !important; font-weight: 700; color: var(--success-green); }
 
@@ -76,6 +90,7 @@
 
 <div class="container">
     <h1>Interactive Cost Analysis Calculator</h1>
+    <div id="clientGreeting">Customized Estimate</div>
     
     <div class="inputs-section">
         <div class="input-group">
@@ -120,28 +135,81 @@
 
     <div class="disclaimer">
         <p><strong>Pricing Tiers Applied:</strong> 1-3 Units: $7,938 | 4-9 Units: $7,468.50 | 10-19 Units: $6,921.50 | 20+ Units: $6,435</p>
-        <p>© 2026 WAHTS. All rights reserved.</p>
+        <p>© 2025 WAHTS. All rights reserved.</p>
     </div>
 </div>
 
 <script>
+    // INITIALIZATION: Handles URL parameters to pre-fill the calculator
+    function init() {
+        const params = new URLSearchParams(window.location.search);
+        
+        // ?client=CompanyName
+        if (params.has('client')) {
+            document.getElementById('clientGreeting').innerText = "Prepared Specifically for " + params.get('client');
+        }
+
+        // ?units=5
+        if (params.has('units')) {
+            document.getElementById('unitCount').value = params.get('units');
+        }
+
+        // ?emps=1200
+        if (params.has('emps')) {
+            document.getElementById('empCount').value = params.get('emps');
+        }
+
+        // ?cloud=no
+        if (params.has('cloud')) {
+            const cloudVal = params.get('cloud').toLowerCase() === 'no' ? 'No' : 'Yes';
+            document.getElementById('cloudNeeded').value = cloudVal;
+        }
+
+        // ?audio=no
+        if (params.has('audio')) {
+            const audioVal = params.get('audio').toLowerCase() === 'no' ? 'No' : 'Yes';
+            document.getElementById('audioNeeded').value = audioVal;
+        }
+
+        // Run calculation after setup
+        calculate();
+    }
+
+    // CALCULATION LOGIC
     function calculate() {
         const units = parseInt(document.getElementById('unitCount').value) || 0;
         const employees = parseInt(document.getElementById('empCount').value) || 0;
         const cloudNeeded = document.getElementById('cloudNeeded').value === "Yes";
         const audioNeeded = document.getElementById('audioNeeded').value === "Yes";
 
+        // Logic for Hardware Pricing Tiers
         let pricePerUnit = units >= 20 ? 6435 : (units >= 10 ? 6921.5 : (units >= 4 ? 7468.5 : 7938));
         const totalUnitCost = units * pricePerUnit;
 
-        // NEW LOGIC: Calibration Rate based on Cloud Selection
+        // NEW LOGIC: Calibration Rate changes based on Cloud choice
         const calibrationRate = cloudNeeded ? 1400 : 1750;
         
         const rows = [
-            { name: "WAHTS Hardware Unit(s)", vals: [totalUnitCost, 0, 0, 0, 0], active: true },
-            { name: "Calibration & Maintenance", vals: [0, (units * calibrationRate), (units * calibrationRate), (units * calibrationRate), (units * calibrationRate)], active: true },
-            { name: "Cloud Database Management", vals: [1700, 1200, 1200, 1200, 1200], active: cloudNeeded },
-            { name: "Audiologist Review Service", vals: Array(5).fill(employees * 4), active: audioNeeded }
+            { 
+                name: "WAHTS Hardware Unit(s)", 
+                vals: [totalUnitCost, 0, 0, 0, 0],
+                active: true
+            },
+            { 
+                name: "Calibration & Maintenance", 
+                vals: [0, (units * calibrationRate), (units * calibrationRate), (units * calibrationRate), (units * calibrationRate)],
+                active: true
+            },
+            { 
+                name: "Cloud Database Management", 
+                vals: [1700, 1200, 1200, 1200, 1200],
+                active: cloudNeeded
+            },
+            { 
+                name: "Audiologist Review Service", 
+                vals: Array(5).fill(employees * 4),
+                active: audioNeeded
+            }
         ];
 
         let html = "";
@@ -160,12 +228,17 @@
             html += `</tr>`;
         });
 
+        // Totals
         html += `<tr class="total-row"><td>Annual Investment</td>` + yearlyTotals.map(t => `<td>$${t.toLocaleString()}</td>`).join('') + `</tr>`;
+        
+        // Cost per Employee
         html += `<tr class="emp-cost-row"><td>Cost Per Employee</td>` + yearlyTotals.map(t => `<td>$${(employees > 0 ? (t / employees).toFixed(2) : 0)}</td>`).join('') + `</tr>`;
 
         document.getElementById('resultsTable').innerHTML = html;
     }
-    calculate();
+
+    // Call init to start
+    init();
 </script>
 </body>
 </html>
