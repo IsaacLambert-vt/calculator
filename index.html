@@ -13,80 +13,32 @@
             --border-color: #e2e8f0;
             --text-main: #334155;
         }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-main);
-            margin: 0; padding: 0; line-height: 1.6;
-        }
-
-        /* Compact Header */
-        header {
-            background: white;
-            padding: 15px 10px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 20px;
-        }
-
-        .logo { max-width: 150px; height: auto; }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto 60px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
-
-        h1 { font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 5px; text-align: center; }
-        
-        #clientGreeting { 
-            font-size: 1.1rem; 
-            color: var(--accent-blue); 
-            text-align: center; 
-            margin-bottom: 25px; 
-            font-weight: 500;
-        }
-
-        /* 2x2 Grid for Questions */
-        .inputs-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            background: #f1f5f9;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-        }
-
+        body { font-family: 'Inter', sans-serif; background-color: var(--light-bg); color: var(--text-main); margin: 0; padding: 0; }
+        header { background: white; padding: 15px; text-align: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
+        .logo { max-width: 150px; }
+        .container { max-width: 1000px; margin: 0 auto 60px auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h1 { font-size: 1.5rem; text-align: center; color: var(--primary-dark); margin-bottom: 5px; }
+        #clientGreeting { font-size: 1.1rem; color: var(--accent-blue); text-align: center; margin-bottom: 25px; font-weight: 500; }
+        .inputs-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f1f5f9; padding: 25px; border-radius: 12px; margin-bottom: 30px; }
         .input-group { display: flex; flex-direction: column; }
-        label { font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; color: var(--primary-dark); }
-        input, select { padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; background: white; transition: border-color 0.2s; }
-        input:focus, select:focus { outline: none; border-color: var(--accent-blue); }
-
-        /* Table Styling */
+        label { font-weight: 600; font-size: 0.85rem; margin-bottom: 8px; }
+        input, select { padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; }
         .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background-color: var(--primary-dark); color: white; padding: 12px; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--primary-dark); color: white; padding: 12px; font-size: 0.8rem; text-transform: uppercase; }
         td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
-        tr:hover { background-color: #fcfcfc; }
+        .total-row { background: #f8fafc; font-weight: 700; border-top: 2px solid var(--primary-dark); }
+        .emp-cost-row { background: #effaf3; font-weight: 700; color: var(--success-green); }
         
-        .total-row { background-color: #f8fafc !important; font-weight: 700; color: var(--primary-dark); border-top: 2px solid var(--primary-dark); }
-        .emp-cost-row { background-color: #effaf3 !important; font-weight: 700; color: var(--success-green); }
-
-        .disclaimer { margin-top: 20px; padding: 15px; font-size: 0.8rem; color: #64748b; border-top: 1px solid #eee; text-align: center; }
-
-        @media (max-width: 600px) { .inputs-section { grid-template-columns: 1fr; } }
+        /* Sales Tool Styling */
+        .link-gen-box { margin-top: 40px; padding: 20px; background: #fff; border: 2px dashed var(--border-color); border-radius: 12px; text-align: center; }
+        .btn { background: var(--accent-blue); color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+        #generatedLink { width: 70%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-<header>
-    <img src="logo.png" alt="WAHTS Logo" class="logo">
-</header>
+<header><img src="logo.png" alt="WAHTS Logo" class="logo"></header>
 
 <div class="container">
     <h1>Interactive Cost Analysis Calculator</h1>
@@ -94,150 +46,92 @@
     
     <div class="inputs-section">
         <div class="input-group">
-            <label for="unitCount">Number of Units Purchasing</label>
-            <input type="number" id="unitCount" value="2" min="1" oninput="calculate()">
+            <label>Number of Units</label>
+            <input type="number" id="unitCount" value="2" oninput="calculate()">
         </div>
         <div class="input-group">
-            <label for="empCount">Number of Employees in HCP</label>
-            <input type="number" id="empCount" value="500" min="1" oninput="calculate()">
+            <label>Employees in HCP</label>
+            <input type="number" id="empCount" value="500" oninput="calculate()">
         </div>
         <div class="input-group">
-            <label for="cloudNeeded">Need Cloud Database Management?</label>
-            <select id="cloudNeeded" onchange="calculate()">
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-            </select>
+            <label>Cloud Database Management?</label>
+            <select id="cloudNeeded" onchange="calculate()"><option>Yes</option><option>No</option></select>
         </div>
         <div class="input-group">
-            <label for="audioNeeded">Need Audiologist Review Service?</label>
-            <select id="audioNeeded" onchange="calculate()">
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-            </select>
+            <label>Audiologist Review Service?</label>
+            <select id="audioNeeded" onchange="calculate()"><option>Yes</option><option>No</option></select>
         </div>
     </div>
 
     <div class="table-container">
         <table>
-            <thead>
-                <tr>
-                    <th>Expense Category</th>
-                    <th>Year 1</th>
-                    <th>Year 2</th>
-                    <th>Year 3</th>
-                    <th>Year 4</th>
-                    <th>Year 5</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Category</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th><th>Year 5</th></tr></thead>
             <tbody id="resultsTable"></tbody>
         </table>
     </div>
 
-    <div class="disclaimer">
-        <p><strong>Pricing Tiers Applied:</strong> 1-3 Units: $7,938 | 4-9 Units: $7,468.50 | 10-19 Units: $6,921.50 | 20+ Units: $6,435</p>
-        <p>© 2025 WAHTS. All rights reserved.</p>
+    <div class="link-gen-box">
+        <h3>Sales Tool: Create Shareable Link</h3>
+        <input type="text" id="clientNameInput" placeholder="Enter Client Name" style="width: 250px; padding: 8px;">
+        <button class="btn" onclick="generateLink()">Generate Link</button><br>
+        <input type="text" id="generatedLink" readonly>
+        <button class="btn" style="background:var(--success-green)" onclick="copyLink()">Copy</button>
     </div>
 </div>
 
 <script>
-    // INITIALIZATION: Handles URL parameters to pre-fill the calculator
     function init() {
-        const params = new URLSearchParams(window.location.search);
-        
-        // ?client=CompanyName
-        if (params.has('client')) {
-            document.getElementById('clientGreeting').innerText = "Prepared Specifically for " + params.get('client');
-        }
-
-        // ?units=5
-        if (params.has('units')) {
-            document.getElementById('unitCount').value = params.get('units');
-        }
-
-        // ?emps=1200
-        if (params.has('emps')) {
-            document.getElementById('empCount').value = params.get('emps');
-        }
-
-        // ?cloud=no
-        if (params.has('cloud')) {
-            const cloudVal = params.get('cloud').toLowerCase() === 'no' ? 'No' : 'Yes';
-            document.getElementById('cloudNeeded').value = cloudVal;
-        }
-
-        // ?audio=no
-        if (params.has('audio')) {
-            const audioVal = params.get('audio').toLowerCase() === 'no' ? 'No' : 'Yes';
-            document.getElementById('audioNeeded').value = audioVal;
-        }
-
-        // Run calculation after setup
+        const p = new URLSearchParams(window.location.search);
+        if (p.has('client')) document.getElementById('clientGreeting').innerText = "Prepared for " + p.get('client');
+        if (p.has('units')) document.getElementById('unitCount').value = p.get('units');
+        if (p.has('emps')) document.getElementById('empCount').value = p.get('emps');
+        if (p.has('cloud')) document.getElementById('cloudNeeded').value = p.get('cloud');
+        if (p.has('audio')) document.getElementById('audioNeeded').value = p.get('audio');
         calculate();
     }
 
-    // CALCULATION LOGIC
     function calculate() {
-        const units = parseInt(document.getElementById('unitCount').value) || 0;
-        const employees = parseInt(document.getElementById('empCount').value) || 0;
-        const cloudNeeded = document.getElementById('cloudNeeded').value === "Yes";
-        const audioNeeded = document.getElementById('audioNeeded').value === "Yes";
-
-        // Logic for Hardware Pricing Tiers
-        let pricePerUnit = units >= 20 ? 6435 : (units >= 10 ? 6921.5 : (units >= 4 ? 7468.5 : 7938));
-        const totalUnitCost = units * pricePerUnit;
-
-        // NEW LOGIC: Calibration Rate changes based on Cloud choice
-        const calibrationRate = cloudNeeded ? 1400 : 1750;
-        
+        const u = parseInt(document.getElementById('unitCount').value) || 0;
+        const e = parseInt(document.getElementById('empCount').value) || 0;
+        const c = document.getElementById('cloudNeeded').value === "Yes";
+        const a = document.getElementById('audioNeeded').value === "Yes";
+        const price = u >= 20 ? 6435 : (u >= 10 ? 6921.5 : (u >= 4 ? 7468.5 : 7938));
+        const cal = c ? 1400 : 1750;
         const rows = [
-            { 
-                name: "WAHTS Hardware Unit(s)", 
-                vals: [totalUnitCost, 0, 0, 0, 0],
-                active: true
-            },
-            { 
-                name: "Calibration & Maintenance", 
-                vals: [0, (units * calibrationRate), (units * calibrationRate), (units * calibrationRate), (units * calibrationRate)],
-                active: true
-            },
-            { 
-                name: "Cloud Database Management", 
-                vals: [1700, 1200, 1200, 1200, 1200],
-                active: cloudNeeded
-            },
-            { 
-                name: "Audiologist Review Service", 
-                vals: Array(5).fill(employees * 4),
-                active: audioNeeded
-            }
+            { n: "Hardware", v: [u*price, 0, 0, 0, 0], act: true },
+            { n: "Calibration", v: [0, u*cal, u*cal, u*cal, u*cal], act: true },
+            { n: "Cloud", v: [1700, 1200, 1200, 1200, 1200], act: c },
+            { n: "Audiologist", v: Array(5).fill(e*4), act: a }
         ];
-
-        let html = "";
-        let yearlyTotals = [0, 0, 0, 0, 0];
-
-        rows.forEach(row => {
-            html += `<tr><td style="font-weight:500;">${row.name}</td>`;
-            row.vals.forEach((v, i) => {
-                if (row.active) {
-                    html += `<td>$${v.toLocaleString()}</td>`;
-                    yearlyTotals[i] += v;
-                } else {
-                    html += `<td style="color: #94a3b8;">N/A ($0)</td>`;
-                }
+        let h = ""; let totals = [0,0,0,0,0];
+        rows.forEach(r => {
+            h += `<tr><td>${r.n}</td>`;
+            r.v.forEach((v, i) => {
+                if (r.act) { h += `<td>$${v.toLocaleString()}</td>`; totals[i] += v; }
+                else h += `<td style="color:#94a3b8">N/A</td>`;
             });
-            html += `</tr>`;
+            h += "</tr>";
         });
-
-        // Totals
-        html += `<tr class="total-row"><td>Annual Investment</td>` + yearlyTotals.map(t => `<td>$${t.toLocaleString()}</td>`).join('') + `</tr>`;
-        
-        // Cost per Employee
-        html += `<tr class="emp-cost-row"><td>Cost Per Employee</td>` + yearlyTotals.map(t => `<td>$${(employees > 0 ? (t / employees).toFixed(2) : 0)}</td>`).join('') + `</tr>`;
-
-        document.getElementById('resultsTable').innerHTML = html;
+        h += `<tr class="total-row"><td>Annual Total</td>` + totals.map(t => `<td>$${t.toLocaleString()}</td>`).join('') + `</tr>`;
+        h += `<tr class="emp-cost-row"><td>Per Employee</td>` + totals.map(t => `<td>$${(e>0?(t/e).toFixed(2):0)}</td>`).join('') + `</tr>`;
+        document.getElementById('resultsTable').innerHTML = h;
     }
 
-    // Call init to start
+    function generateLink() {
+        const url = window.location.origin + window.location.pathname;
+        const name = document.getElementById('clientNameInput').value;
+        const u = document.getElementById('unitCount').value;
+        const e = document.getElementById('empCount').value;
+        const c = document.getElementById('cloudNeeded').value;
+        const a = document.getElementById('audioNeeded').value;
+        document.getElementById('generatedLink').value = `${url}?client=${encodeURIComponent(name)}&units=${u}&emps=${e}&cloud=${c}&audio=${a}`;
+    }
+
+    function copyLink() {
+        document.getElementById('generatedLink').select();
+        document.execCommand("copy");
+        alert("Link Copied!");
+    }
     init();
 </script>
 </body>
